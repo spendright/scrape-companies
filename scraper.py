@@ -12,20 +12,25 @@ TM_SYMBOLS = u'®\u2120™'  # 2120 is SM symbol
 
 
 def main():
+    args = sys.argv[1:]
+    scraper_names = args or get_scraper_names()
+
     failed = False
 
-    for scraper in scraper_modules():
-        sys.stderr.write(scraper.__name__ + '\n')
+    for scraper_name in scraper_names:
+        sys.stderr.write('running scraper: {}\n'.format(scraper_name))
         try:
+            scraper = load_scraper(scraper_name)
+
             records = scraper.scrape()
             if not isinstance(records, dict):
-                company = scraper.COMPANY
+                company = clean_string(scraper.COMPANY)
                 records = {company: clean_scraper_output(records)}
+
+            save_records(records)
         except:
             failed = True
             print_exc()
-
-        save_records(records)
 
     sys.exit(int(failed))
 
@@ -44,12 +49,16 @@ def save_records(records):
                 ['company', 'brand'], row, table_name = 'brand')
 
 
-def scraper_modules():
+def get_scraper_names():
     for filename in sorted(listdir(dirname(scrapers.__file__))):
         if filename.endswith('.py') and not filename.startswith('_'):
-            module_name = 'scrapers.' + filename[:-3]
-            __import__(module_name)
-            yield sys.modules[module_name]
+            yield filename[:-3]
+
+
+def load_scraper(name):
+    module_name = 'scrapers.' + name
+    __import__(module_name)
+    return sys.modules[module_name]
 
 
 def clean_string(s):
