@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import scraperwiki
-from util import wrap_scraper
 
 
 COMPANY = 'Kraft Foods'
@@ -9,10 +8,6 @@ EXTRA_BRANDS = ['Kraft']
 
 
 def scrape():
-    return {COMPANY: wrap_scraper(_scrape())}
-
-
-def _scrape():
     for b in EXTRA_BRANDS:
         yield b
 
