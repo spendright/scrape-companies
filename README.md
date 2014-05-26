@@ -14,7 +14,7 @@ https://morph.io/spendright-scrapers/brands. More info about the schema
 below. The entry point is `scraper.py`
 
 The simplest way to write a scraper is to add a module to scrapers/ which
-defines COMPANY (the company name) and scrape(), a function which yields
+defines `COMPANY` (the company name) and `scrape()`, a function which yields
 brand names. `scraper.py` automatically strips whitespace and (tm), etc.
 and performs de-duplication. As an example, here is the scraper for
 Kraft Foods in its entirety (`scrapers/kraft.py`):
