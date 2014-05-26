@@ -79,12 +79,12 @@ def clean_string(s):
 
 
 def clean_brand(brand):
-    """clean_string(), plus strip trailing ® or ™"""
-    brand = clean_string(brand)
+    """strip anything after ® or ™, then clean_string()"""
     for c in TM_SYMBOLS:
-        if brand.endswith(c):
-            brand = brand[:-1]
-    return brand
+        if c in brand:
+            brand = brand[:brand.index(c)]
+
+    return clean_string(brand)
 
 
 def clean_dict(dict):
