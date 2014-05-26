@@ -8,7 +8,7 @@ COMPANY = 'Clorox'
 URL = 'http://www.thecloroxcompany.com/products/our-brands/'
 
 
-def scrape():
+def scrape_brands():
 
     soup = BeautifulSoup(scraperwiki.scrape(URL))
 

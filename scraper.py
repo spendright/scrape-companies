@@ -30,7 +30,7 @@ def main():
         try:
             scraper = load_scraper(scraper_name)
 
-            records = scraper.scrape()
+            records = scraper.scrape_brands()
             if not isinstance(records, dict):
                 company = clean_string(scraper.COMPANY)
                 records = {company: clean_scraper_output(records)}

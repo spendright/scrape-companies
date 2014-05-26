@@ -36,7 +36,7 @@ NON_BRANDS = [
 ]
 
 
-def scrape():
+def scrape_brands():
     yield COMPANY
     for brand in EXTRA_BRANDS:
         yield brand

@@ -11,7 +11,7 @@ URL = 'http://www.kraftfoodsgroup.com/brands/index.aspx'
 EXTRA_BRANDS = ['Kraft']
 
 
-def scrape():
+def scrape_brands():
     for b in EXTRA_BRANDS:
         yield b
 

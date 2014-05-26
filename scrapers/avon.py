@@ -16,7 +16,7 @@ SKIP_CATEGORIES = ['hair care']
 MORE_BRANDS = ['Advance Techniques']
 
 
-def scrape():
+def scrape_brands():
     yield COMPANY
     for brand in MORE_BRANDS:
         yield brand

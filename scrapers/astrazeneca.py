@@ -17,7 +17,7 @@ SEPARATOR_RE = re.compile('[,/]')
 OTC_BRANDS = ['emla']  # Lidocaine Cream
 
 
-def scrape():
+def scrape_brands():
     soup = BeautifulSoup(scraperwiki.scrape(URL))
 
     yield COMPANY
