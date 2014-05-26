@@ -11,8 +11,6 @@ COMPANY = u'Novartis'
 NOVARTIS_OTC_START_URL = 'http://www.novartis.com/products/over-the-counter.shtml'
 ALCON_PRODUCTS_URL = 'http://www.alcon.com/eye-care-products/'
 
-R_AND_TM = u'®™'
-
 
 EXTRA_BRANDS = [COMPANY, 'Alcon']
 
@@ -42,9 +40,4 @@ def scrape_brands():
         'div', attrs={'class':'accordionContent'})
 
     for h4 in otc_div.select('h4'):
-        brand = h4.text.strip()
-        for c in R_AND_TM:
-            if c in brand:
-                brand = brand[:brand.index(c)].strip()
-        if brand:
-            yield brand
+        yield h4.text
