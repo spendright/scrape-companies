@@ -43,8 +43,8 @@ its module name on the command line: `python scraper.py kraft`.
 
 The main use case for this is to match consumer products, so it's helpful
 to know if a brand applies to a service, prescription only, or only marketed
-to other businesses. It's also helpful to have category information (to
-distinguish it from brands with the same name owned by other companies).
+to other businesses. We use flags like `is_prescription` to call out
+edge cases like this.
 
 To include additional information about a brand, yield a dict with the
 `brand` field set to the brand name, and additional fields. For example,
@@ -60,6 +60,7 @@ any fields you like, but these are the ones we're aiming for:
 
  * `company`: name of the company, minus ", Inc." etc.
  * `brand`: brand name, minus "TM", etc.
+ * `is_licensed': set to 1 if licensed from another company
  * `is_service`: set to 1 if a service, not a product (e.g. Airlines)
  * `is_prescription`: set to 1 if prescription-only
  * `is_b2b`: set to 1 if primarly marketed to other businesses (e.g. pesticide)

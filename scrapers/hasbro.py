@@ -35,5 +35,7 @@ def scrape_brands():
 
     for a in soup.select('#hsb_shop_bl_container li ul li a'):
         brand = a.text
-        if brand not in LICENSED_BRANDS:
+        if brand in LICENSED_BRANDS:
+            yield dict(brand=brand, is_licensed=True)
+        else:
             yield brand
