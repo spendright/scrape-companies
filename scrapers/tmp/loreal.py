@@ -3,7 +3,7 @@ import scraperwiki
 
 COMPANY = "L'Oreal"
 
-ALL_BRANDS_URL = 'http://www.lorealusa.com/brands/consumer-products-division/softsheen-carson.aspx'
+URL = 'http://www.lorealusa.com/brands/consumer-products-division/softsheen-carson.aspx'
 
 
 # fragances, mostly
@@ -20,7 +20,7 @@ LICENSED_BRANDS = [
 def scrape_brands():
     yield COMPANY
 
-    soup = BeautifulSoup(scraperwiki.scrape(ALL_BRANDS_URL))
+    soup = BeautifulSoup(scraperwiki.scrape(URL))
 
     # this gets the same brands several times, but that's okay
     for strong in soup.select('.slides strong'):

@@ -4,13 +4,13 @@ import scraperwiki
 
 COMPANY = u'Johnson & Johnson'
 
-ALL_BRANDS_URL = 'http://www.jnj.com/healthcare-products/consumer'
+URL = 'http://www.jnj.com/healthcare-products/consumer'
 
 
 def scrape_brands():
     yield COMPANY
 
-    soup = BeautifulSoup(scraperwiki.scrape(ALL_BRANDS_URL))
+    soup = BeautifulSoup(scraperwiki.scrape(URL))
 
     for a in soup.select('.item-list .views-field-title a'):
         yield list(a.stripped_strings)[0]
