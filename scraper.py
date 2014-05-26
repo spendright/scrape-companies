@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+"""Main loop for all brand scrapers.
+
+If you want to run particular scrapers (for testing), you can put
+their names on the command line (e.g. python scraper.py avon kraft).
+
+It's fine to import from this module inside a scraper
+(e.g. from scraper import TM_SYMBOLS)
+"""
 from os.path import dirname
 from os import listdir
 from traceback import print_exc
