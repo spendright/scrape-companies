@@ -118,7 +118,8 @@ def clean_scraper_output(items):
 
             brand = item.pop('brand')  # modifies dict. that's okay
             brand = clean_brand(brand)
-            results[brand] = item
+            if brand:
+                results[brand] = item
         else:
             brand = clean_brand(item)
             if brand:
