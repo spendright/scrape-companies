@@ -19,8 +19,7 @@ def scrape_brands():
     for brand in MORE_BRANDS:
         yield brand
 
-    start_soup = get_soup(
-        'http://www.rb.com/ourbrands/search-rb-brands-a-z/a-f')
+    start_soup = BeautifulSoup(scraperwiki.scrape(START_URL))
 
     urls = [a['href'] for a in start_soup.select('li.active_ancestor_2 li a')]
 
