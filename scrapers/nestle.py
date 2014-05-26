@@ -4,8 +4,8 @@ from urlparse import urljoin
 from bs4 import BeautifulSoup
 import scraperwiki
 
-# using unaccented version for consistency with ClimateCounts
-COMPANY = 'Nestle' #u'Nestlé'
+
+COMPANY = u'Nestlé'
 
 R_AND_TM = u'®™'
 
