@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import scraperwiki
 
 
-COMPANY = 'AB Electrolux'
+COMPANY = 'Electrolux'  # full name is AB Electrolux, but "AB" is like "Inc."
 
 URL = 'http://brandlicensing.electrolux.com/node658.aspx?id=53'
 NON_BRANDS = ['Close Window']
