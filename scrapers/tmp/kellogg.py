@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from ..common import get_soup
+from bs4 import BeautifulSoup
+import scraperwiki
 
 
 R_AND_TM = u'®™'
@@ -14,7 +15,7 @@ def scrape_brands():
     for b in EXTRA_BRANDS:
         yield b
 
-    soup = get_soup(ALL_BRANDS_URL)
+    soup = BeautifulSoup(scraperwiki.scrape(ALL_BRANDS_URL))
 
     for a in soup.select('#navleft-brand a'):
         brand = a.text

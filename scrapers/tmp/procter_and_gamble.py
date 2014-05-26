@@ -1,6 +1,7 @@
 from urlparse import urljoin
 
-from ..common import get_soup
+from bs4 import BeautifulSoup
+import scraperwiki
 
 COMPANY = 'Procter & Gamble'
 
@@ -15,14 +16,14 @@ def scrape_brands():
     for brand in EXTRA_BRANDS:
         yield brand
 
-    start_soup = get_soup(START_URL)
+    start_soup = BeautifulSoup(scraperwiki.scrape(START_URL))
 
     urls = [urljoin(START_URL, a['href'])
             for a in start_soup.select('#category-navigation a')
             if a.text.strip().startswith('Global')]
 
     for url in urls:
-        soup = get_soup(url)
+        soup = BeautifulSoup(scraperwiki.scrape(url))
 
         for div in soup.select('.list-prods div.product'):
             brand = div.text

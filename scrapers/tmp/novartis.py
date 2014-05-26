@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from urlparse import urljoin
 
-from ..common import get_soup
+from bs4 import BeautifulSoup
+import scraperwiki
 
 
 COMPANY = u'Novartis'
@@ -20,7 +21,7 @@ def scrape_brands():
     for brand in EXTRA_BRANDS:
         yield brand
 
-    start_soup = get_soup(NOVARTIS_OTC_START_URL)
+    start_soup = BeautifulSoup(scraperwiki.scrape(NOVARTIS_OTC_START_URL))
     urls = [urljoin(NOVARTIS_OTC_START_URL, a['href'])
             for a in start_soup.select('.tabs.statictabs a')]
 
@@ -28,12 +29,12 @@ def scrape_brands():
         if url == NOVARTIS_OTC_START_URL:
             soup = start_soup
         else:
-            soup = get_soup(url)
+            soup = BeautifulSoup(scraperwiki.scrape(url))
 
         for i in soup.select('.panes .text-container i'):
             yield i.text
 
-    alcon_soup = get_soup(ALCON_PRODUCTS_URL)
+    alcon_soup = BeautifulSoup(scraperwiki.scrape(ALCON_PRODUCTS_URL))
 
     start_div = [div for div in alcon_soup.select('div.accordionButton')
                  if div.text.lower() == 'over-the-counter'][0]

@@ -1,4 +1,5 @@
-from ..common import get_soup
+from bs4 import BeautifulSoup
+import scraperwiki
 
 
 COMPANY = u'Hasbro'
@@ -30,7 +31,7 @@ LICENSED_BRANDS = [
 def scrape_brands():
     yield COMPANY
 
-    soup = get_soup(ALL_BRANDS_URL)
+    soup = BeautifulSoup(scraperwiki.scrape(ALL_BRANDS_URL))
 
     for a in soup.select('#hsb_shop_bl_container li ul li a'):
         brand = a.text

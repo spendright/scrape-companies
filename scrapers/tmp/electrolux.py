@@ -1,4 +1,5 @@
-from ..common import get_soup
+from bs4 import BeautifulSoup
+import scraperwiki
 
 
 COMPANY = 'AB Electrolux'
@@ -8,7 +9,7 @@ NON_BRANDS = ['Close Window']
 
 
 def scrape_brands():
-    soup = get_soup(ALL_BRANDS_URL)
+    soup = BeautifulSoup(scraperwiki.scrape(ALL_BRANDS_URL))
 
     brands = set()
 

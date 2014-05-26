@@ -1,4 +1,5 @@
-from ..common import get_soup
+from bs4 import BeautifulSoup
+import scraperwiki
 
 
 COMPANY = u'Reckitt-Benckiser'
@@ -27,7 +28,7 @@ def scrape_brands():
         if url == START_URL:
             soup = start_soup
         else:
-            soup = get_soup(url)
+            soup = BeautifulSoup(scraperwiki.scrape(url))
 
         for fp in soup.select('div.featuredproduct'):
             h2 = fp.h2

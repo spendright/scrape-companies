@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from urlparse import urljoin
 
-from ..common import get_soup
+from bs4 import BeautifulSoup
+import scraperwiki
 
 # using unaccented version for consistency with ClimateCounts
 COMPANY = 'Nestle' #u'Nestlé'
@@ -16,14 +17,14 @@ SKIP_LINKS = ['websites']
 def scrape_brands():
     yield COMPANY
 
-    start_soup = get_soup(START_URL)
+    start_soup = BeautifulSoup(scraperwiki.scrape(START_URL))
 
     urls = [urljoin(START_URL, a['href'])
             for a in start_soup.select('#sNavigation a')
             if a.text.strip().lower() not in SKIP_LINKS]
 
     for url in urls:
-        soup = get_soup(url)
+        soup = BeautifulSoup(scraperwiki.scrape(url))
 
         for a in soup.select('.brandCarousel a'):
             href = a['href']

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from ..common import get_soup
+from bs4 import BeautifulSoup
+import scraperwiki
 
 
 COMPANY = 'Unilever'
@@ -19,7 +20,7 @@ def scrape_brands():
     for brand in EXTRA_BRANDS:
         yield brand
 
-    soup = get_soup(TOP_BRANDS_URL)
+    soup = BeautifulSoup(scraperwiki.scrape(TOP_BRANDS_URL))
 
     for span in soup.select('.zlist span.title'):
         brand = span.text

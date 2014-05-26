@@ -1,4 +1,5 @@
-from ..common import get_soup
+from bs4 import BeautifulSoup
+import scraperwiki
 
 COMPANY = "L'Oreal"
 
@@ -19,7 +20,7 @@ LICENSED_BRANDS = [
 def scrape_brands():
     yield COMPANY
 
-    soup = get_soup(ALL_BRANDS_URL)
+    soup = BeautifulSoup(scraperwiki.scrape(ALL_BRANDS_URL))
 
     # this gets the same brands several times, but that's okay
     for strong in soup.select('.slides strong'):

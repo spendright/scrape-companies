@@ -1,4 +1,5 @@
-from ..common import get_soup
+from bs4 import BeautifulSoup
+import scraperwiki
 
 
 COMPANY = u'PepsiCo'
@@ -13,7 +14,7 @@ JOINT_VENTURES_TEXT = [
 def scrape_brands():
     yield COMPANY
 
-    soup = get_soup(ALL_BRANDS_URL)
+    soup = BeautifulSoup(scraperwiki.scrape(ALL_BRANDS_URL))
 
     for div in soup.select('div.brand'):
         # exclude joint ventures (e.g. Starbucks)
