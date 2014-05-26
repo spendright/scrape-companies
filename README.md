@@ -19,25 +19,24 @@ yields brand names. `scraper.py` automatically strips whitespace and (tm), etc.
 and performs de-duplication. As an example, here is the scraper for
 Kraft Foods in its entirety (`scrapers/kraft.py`):
 
-```
-from bs4 import BeautifulSoup
-import scraperwiki
+
+    from bs4 import BeautifulSoup
+    import scraperwiki
 
 
-COMPANY = 'Kraft Foods'
-URL = 'http://www.kraftfoodsgroup.com/brands/index.aspx'
-EXTRA_BRANDS = ['Kraft']
+    COMPANY = 'Kraft Foods'
+    URL = 'http://www.kraftfoodsgroup.com/brands/index.aspx'
+    EXTRA_BRANDS = ['Kraft']
 
 
-def scrape_brands():
-    for b in EXTRA_BRANDS:
-        yield b
+    def scrape_brands():
+        for b in EXTRA_BRANDS:
+            yield b
 
-    soup = BeautifulSoup(scraperwiki.scrape(URL))
+        soup = BeautifulSoup(scraperwiki.scrape(URL))
 
-    for h1 in soup.select('.brand h1'):
-        yield h1.text
-```
+        for h1 in soup.select('.brand h1'):
+            yield h1.text
 
 To test a particular scraper rather than running all of them, just specify
 its module name on the command line: `python scraper.py kraft`.
@@ -51,12 +50,10 @@ To include additional information about a brand, yield a dict with the
 `brand` field set to the brand name, and additional fields. For example,
 here's a snippet from `scraper/astrazeneca.py` that tags prescription brands:
 
-```
-if brand.strip().lower() in OTC_BRANDS:
-    yield brand
-else:
-    yield dict(brand=brand, is_prescription=True)
-```
+    if brand.strip().lower() in OTC_BRANDS:
+        yield brand
+    else:
+        yield dict(brand=brand, is_prescription=True)
 
 Currently the scraper only outputs a single table, `brand`. You can add
 any fields you like, but these are the ones we're aiming for:
