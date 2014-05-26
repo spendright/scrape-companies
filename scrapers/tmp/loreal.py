@@ -2,11 +2,11 @@ from ..common import get_soup
 
 COMPANY = "L'Oreal"
 
-_ALL_BRANDS_URL = 'http://www.lorealusa.com/brands/consumer-products-division/softsheen-carson.aspx'
+ALL_BRANDS_URL = 'http://www.lorealusa.com/brands/consumer-products-division/softsheen-carson.aspx'
 
 
 # fragances, mostly
-_LICENSED_BRANDS = [
+LICENSED_BRANDS = [
     'Cacharel',
     'Diesel',
     'Giorgio Armani',
@@ -19,7 +19,7 @@ _LICENSED_BRANDS = [
 def scrape_brands():
     yield COMPANY
 
-    soup = get_soup(_ALL_BRANDS_URL)
+    soup = get_soup(ALL_BRANDS_URL)
 
     # this gets the same brands several times, but that's okay
     for strong in soup.select('.slides strong'):
@@ -27,5 +27,5 @@ def scrape_brands():
         if brand.endswith(';'):
             brand = brand[:-1]
 
-        if brand not in _LICENSED_BRANDS:
+        if brand not in LICENSED_BRANDS:
             yield brand

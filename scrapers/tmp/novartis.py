@@ -7,25 +7,25 @@ from ..common import get_soup
 COMPANY = u'Novartis'
 
 
-_NOVARTIS_OTC_START_URL = 'http://www.novartis.com/products/over-the-counter.shtml'
-_ALCON_PRODUCTS_URL = 'http://www.alcon.com/eye-care-products/'
+NOVARTIS_OTC_START_URL = 'http://www.novartis.com/products/over-the-counter.shtml'
+ALCON_PRODUCTS_URL = 'http://www.alcon.com/eye-care-products/'
 
 R_AND_TM = u'®™'
 
 
-_EXTRA_BRANDS = [COMPANY, 'Alcon']
+EXTRA_BRANDS = [COMPANY, 'Alcon']
 
 
 def scrape_brands():
-    for brand in _EXTRA_BRANDS:
+    for brand in EXTRA_BRANDS:
         yield brand
 
-    start_soup = get_soup(_NOVARTIS_OTC_START_URL)
-    urls = [urljoin(_NOVARTIS_OTC_START_URL, a['href'])
+    start_soup = get_soup(NOVARTIS_OTC_START_URL)
+    urls = [urljoin(NOVARTIS_OTC_START_URL, a['href'])
             for a in start_soup.select('.tabs.statictabs a')]
 
     for url in urls:
-        if url == _NOVARTIS_OTC_START_URL:
+        if url == NOVARTIS_OTC_START_URL:
             soup = start_soup
         else:
             soup = get_soup(url)
@@ -33,7 +33,7 @@ def scrape_brands():
         for i in soup.select('.panes .text-container i'):
             yield i.text
 
-    alcon_soup = get_soup(_ALCON_PRODUCTS_URL)
+    alcon_soup = get_soup(ALCON_PRODUCTS_URL)
 
     start_div = [div for div in alcon_soup.select('div.accordionButton')
                  if div.text.lower() == 'over-the-counter'][0]

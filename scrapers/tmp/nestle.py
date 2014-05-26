@@ -8,19 +8,19 @@ COMPANY = 'Nestle' #u'Nestlé'
 
 R_AND_TM = u'®™'
 
-_START_URL = 'http://www.nestleusa.com/brands'
+START_URL = 'http://www.nestleusa.com/brands'
 
-_SKIP_LINKS = ['websites']
+SKIP_LINKS = ['websites']
 
 
 def scrape_brands():
     yield COMPANY
 
-    start_soup = get_soup(_START_URL)
+    start_soup = get_soup(START_URL)
 
-    urls = [urljoin(_START_URL, a['href'])
+    urls = [urljoin(START_URL, a['href'])
             for a in start_soup.select('#sNavigation a')
-            if a.text.strip().lower() not in _SKIP_LINKS]
+            if a.text.strip().lower() not in SKIP_LINKS]
 
     for url in urls:
         soup = get_soup(url)

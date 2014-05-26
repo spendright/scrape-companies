@@ -3,11 +3,11 @@ from ..common import get_soup
 
 COMPANY = u'Hasbro'
 
-_ALL_BRANDS_URL = 'http://www.hasbro.com/shop/brandlist.cfm'
+ALL_BRANDS_URL = 'http://www.hasbro.com/shop/brandlist.cfm'
 
 
 # these are licensed by multiple companies
-_LICENSED_BRANDS = [
+LICENSED_BRANDS = [
     'Angry Birds',
     'Captain America',
     'Disney',
@@ -30,9 +30,9 @@ _LICENSED_BRANDS = [
 def scrape_brands():
     yield COMPANY
 
-    soup = get_soup(_ALL_BRANDS_URL)
+    soup = get_soup(ALL_BRANDS_URL)
 
     for a in soup.select('#hsb_shop_bl_container li ul li a'):
         brand = a.text
-        if brand not in _LICENSED_BRANDS:
+        if brand not in LICENSED_BRANDS:
             yield brand

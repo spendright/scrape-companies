@@ -6,15 +6,15 @@ R_AND_TM = u'®™'
 
 COMPANY = 'Kellogg'
 
-_ALL_BRANDS_URL = 'http://www.kelloggs.com/en_US/product-search.pt-*.html'
-_EXTRA_BRANDS = ["Kellogg's"]
+ALL_BRANDS_URL = 'http://www.kelloggs.com/en_US/product-search.pt-*.html'
+EXTRA_BRANDS = ["Kellogg's"]
 
 
 def scrape_brands():
-    for b in _EXTRA_BRANDS:
+    for b in EXTRA_BRANDS:
         yield b
 
-    soup = get_soup(_ALL_BRANDS_URL)
+    soup = get_soup(ALL_BRANDS_URL)
 
     for a in soup.select('#navleft-brand a'):
         brand = a.text

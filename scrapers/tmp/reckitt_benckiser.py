@@ -4,9 +4,9 @@ from ..common import get_soup
 COMPANY = u'Reckitt-Benckiser'
 
 
-_START_URL = 'http://www.rb.com/ourbrands/search-rb-brands-a-z/a-f'
+START_URL = 'http://www.rb.com/ourbrands/search-rb-brands-a-z/a-f'
 
-_MORE_BRANDS = [
+MORE_BRANDS = [
     COMPANY,
     u'Reckitt',
     #u'Reckitt & Benckiser',  # appears on amazon, but not really legit
@@ -15,7 +15,7 @@ _MORE_BRANDS = [
 
 def scrape_brands():
 
-    for brand in _MORE_BRANDS:
+    for brand in MORE_BRANDS:
         yield brand
 
     start_soup = get_soup(
@@ -24,7 +24,7 @@ def scrape_brands():
     urls = [a['href'] for a in start_soup.select('li.active_ancestor_2 li a')]
 
     for url in urls:
-        if url == _START_URL:
+        if url == START_URL:
             soup = start_soup
         else:
             soup = get_soup(url)

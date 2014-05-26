@@ -13,12 +13,12 @@ COMPANY = 'Coca-Cola Company'
 #
 # This returns JSON for an AJAX script.
 # The corresponding page is http://www.coca-colacompany.com/brands/all/
-_US_BRANDS_URL = 'http://www.coca-colacompany.com/api/getAllBrands?country=united-states'
+US_BRANDS_URL = 'http://www.coca-colacompany.com/api/getAllBrands?country=united-states'
 
 
 def scrape_brands():
 
-    brand_json = json.load(urlopen(_US_BRANDS_URL))
+    brand_json = json.load(urlopen(US_BRANDS_URL))
 
     for brand in brand_json['brands']:
         name_html = brand['name']['desktop']
