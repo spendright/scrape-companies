@@ -4,7 +4,7 @@ from urlparse import urljoin
 from ..common import get_soup
 
 
-NAME = u'Novartis'
+COMPANY = u'Novartis'
 
 
 _NOVARTIS_OTC_START_URL = 'http://www.novartis.com/products/over-the-counter.shtml'
@@ -13,7 +13,7 @@ _ALCON_PRODUCTS_URL = 'http://www.alcon.com/eye-care-products/'
 R_AND_TM = u'®™'
 
 
-_EXTRA_BRANDS = [NAME, 'Alcon']
+_EXTRA_BRANDS = [COMPANY, 'Alcon']
 
 
 def scrape_brands():

@@ -1,7 +1,7 @@
 from ..common import get_soup
 
 
-NAME = 'ConAgra Foods'
+COMPANY = 'ConAgra Foods'
 
 _ALL_BRANDS_URL = 'http://www.conagrafoods.com/our-food/brands'
 

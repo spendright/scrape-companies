@@ -1,12 +1,12 @@
 from ..common import get_soup
 
-NAME = 'Steelcase'
+COMPANY = 'Steelcase'
 
 _PRODUCTS_URL = 'http://www.steelcase.com/en/pages/homepage.aspx'
 
 
 def scrape_brands():
-    yield NAME
+    yield COMPANY
 
     soup = get_soup(_PRODUCTS_URL)
 

@@ -1,7 +1,7 @@
 from ..common import get_soup
 
 
-NAME = u'Hasbro'
+COMPANY = u'Hasbro'
 
 _ALL_BRANDS_URL = 'http://www.hasbro.com/shop/brandlist.cfm'
 
@@ -28,7 +28,7 @@ _LICENSED_BRANDS = [
 
 
 def scrape_brands():
-    yield NAME
+    yield COMPANY
 
     soup = get_soup(_ALL_BRANDS_URL)
 

@@ -1,7 +1,7 @@
 from ..common import get_soup
 
 
-NAME = 'AB Electrolux'
+COMPANY = 'AB Electrolux'
 
 _ALL_BRANDS_URL = 'http://brandlicensing.electrolux.com/node658.aspx?id=53'
 _NON_BRANDS = ['Close Window']

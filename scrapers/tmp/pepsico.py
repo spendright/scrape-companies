@@ -1,7 +1,7 @@
 from ..common import get_soup
 
 
-NAME = u'PepsiCo'
+COMPANY = u'PepsiCo'
 
 _ALL_BRANDS_URL = 'http://www.pepsico.com/Brands/BrandExplorer'
 
@@ -11,7 +11,7 @@ _JOINT_VENTURES_TEXT = [
 
 
 def scrape_brands():
-    yield NAME
+    yield COMPANY
 
     soup = get_soup(_ALL_BRANDS_URL)
 

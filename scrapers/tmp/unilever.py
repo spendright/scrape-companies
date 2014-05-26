@@ -2,7 +2,7 @@
 from ..common import get_soup
 
 
-NAME = 'Unilever'
+COMPANY = 'Unilever'
 
 # this page says Unilever has "more than 1000 brands" (!)
 _TOP_BRANDS_URL = 'http://www.unileverusa.com/brands-in-action/view-brands.aspx?view=AtoZ'
@@ -15,7 +15,7 @@ R_AND_TM = u'®™'
 
 
 def scrape_brands():
-    yield NAME
+    yield COMPANY
     for brand in _EXTRA_BRANDS:
         yield brand
 

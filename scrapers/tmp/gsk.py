@@ -3,7 +3,7 @@ from urlparse import urljoin
 from ..common import get_soup
 
 
-NAME = u'GlaxoSmithKline'
+COMPANY = u'GlaxoSmithKline'
 
 _START_URL = 'http://www.gsk.com/products/our-consumer-healthcare-products.html'
 
@@ -11,7 +11,7 @@ _SHORTEN_BRANDS = ['Beechams']
 
 
 def scrape_brands():
-    yield NAME
+    yield COMPANY
 
     start_soup = get_soup(_START_URL)
 

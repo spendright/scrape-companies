@@ -3,7 +3,7 @@ from urlparse import urljoin
 from ..common import get_soup
 
 
-NAME = 'General Mills'
+COMPANY = 'General Mills'
 
 _START_URL = 'http://www.generalmills.com/Brands.aspx'
 _SKIP_SECTIONS = ['Brands', 'General Mills Shop']

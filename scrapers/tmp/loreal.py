@@ -1,6 +1,6 @@
 from ..common import get_soup
 
-NAME = "L'Oreal"
+COMPANY = "L'Oreal"
 
 _ALL_BRANDS_URL = 'http://www.lorealusa.com/brands/consumer-products-division/softsheen-carson.aspx'
 
@@ -17,7 +17,7 @@ _LICENSED_BRANDS = [
 
 
 def scrape_brands():
-    yield NAME
+    yield COMPANY
 
     soup = get_soup(_ALL_BRANDS_URL)
 

@@ -1,13 +1,13 @@
 from ..common import get_soup
 
 
-NAME = u'Johnson & Johnson'
+COMPANY = u'Johnson & Johnson'
 
 _ALL_BRANDS_URL = 'http://www.jnj.com/healthcare-products/consumer'
 
 
 def scrape_brands():
-    yield NAME
+    yield COMPANY
 
     soup = get_soup(_ALL_BRANDS_URL)
 

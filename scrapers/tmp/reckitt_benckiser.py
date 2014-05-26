@@ -1,13 +1,13 @@
 from ..common import get_soup
 
 
-NAME = u'Reckitt-Benckiser'
+COMPANY = u'Reckitt-Benckiser'
 
 
 _START_URL = 'http://www.rb.com/ourbrands/search-rb-brands-a-z/a-f'
 
 _MORE_BRANDS = [
-    NAME,
+    COMPANY,
     u'Reckitt',
     #u'Reckitt & Benckiser',  # appears on amazon, but not really legit
 ]

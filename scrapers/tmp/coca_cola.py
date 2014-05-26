@@ -3,7 +3,7 @@ from urllib2 import urlopen
 import json
 
 
-NAME = 'Coca-Cola Company'
+COMPANY = 'Coca-Cola Company'
 
 # Coca-Cola brands are a major source of false positives and not that
 # important to searching on Amazon, so sticking to US brands for now.

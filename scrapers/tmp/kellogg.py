@@ -4,7 +4,7 @@ from ..common import get_soup
 
 R_AND_TM = u'®™'
 
-NAME = 'Kellogg'
+COMPANY = 'Kellogg'
 
 _ALL_BRANDS_URL = 'http://www.kelloggs.com/en_US/product-search.pt-*.html'
 _EXTRA_BRANDS = ["Kellogg's"]

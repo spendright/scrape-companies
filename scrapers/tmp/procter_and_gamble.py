@@ -2,7 +2,7 @@ from urlparse import urljoin
 
 from ..common import get_soup
 
-NAME = 'Procter & Gamble'
+COMPANY = 'Procter & Gamble'
 
 _START_URL = 'http://www.pg.com/en_US/brands/index.shtml?document'
 
@@ -11,7 +11,7 @@ _EXTRA_BRANDS = ['James Bond 007']  # fragrance
 _LICENSED_BRANDS = ['Dolce & Gabbana']
 
 def scrape_brands():
-    yield NAME
+    yield COMPANY
     for brand in _EXTRA_BRANDS:
         yield brand
 

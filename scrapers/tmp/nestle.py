@@ -4,7 +4,7 @@ from urlparse import urljoin
 from ..common import get_soup
 
 # using unaccented version for consistency with ClimateCounts
-NAME = 'Nestle' #u'Nestlé'
+COMPANY = 'Nestle' #u'Nestlé'
 
 R_AND_TM = u'®™'
 
@@ -14,7 +14,7 @@ _SKIP_LINKS = ['websites']
 
 
 def scrape_brands():
-    yield NAME
+    yield COMPANY
 
     start_soup = get_soup(_START_URL)
 

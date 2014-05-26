@@ -1,6 +1,6 @@
 from ..common import get_soup
 
-NAME = 'Kimberly-Clark'
+COMPANY = 'Kimberly-Clark'
 
 _START_URL = 'http://www.kimberly-clark.com/ourbrands.aspx'
 
@@ -29,7 +29,7 @@ _PROFESSIONAL_BRANDS = [
 ]
 
 def scrape_brands():
-    yield NAME
+    yield COMPANY
     for brand in _HEALTH_CARE_BRANDS + _PROFESSIONAL_BRANDS:
         yield brand
 
