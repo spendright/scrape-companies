@@ -14,12 +14,12 @@ https://morph.io/spendright-scrapers/brands. More info about the schema
 below. The entry point is `scraper.py`
 
 The simplest way to write a scraper is to add a module to scrapers/ which
-defines `COMPANY` (the company name) and `scrape_brands()`, a function which yields
-brand names. `scraper.py` automatically strips whitespace and (tm), etc.
+defines `COMPANY` (the company name) and `scrape_brands()`, a function which
+yields brand names. `scraper.py` automatically strips whitespace and (tm), etc.
 and performs de-duplication. As an example, here is the scraper for
 Kraft Foods in its entirety (`scrapers/kraft.py`):
 
-```python
+```
 from bs4 import BeautifulSoup
 import scraperwiki
 
@@ -51,7 +51,7 @@ To include additional information about a brand, yield a dict with the
 `brand` field set to the brand name, and additional fields. For example,
 here's a snippet from `scraper/astrazeneca.py` that tags prescription brands:
 
-```python
+```
 if brand.strip().lower() in OTC_BRANDS:
     yield brand
 else:
