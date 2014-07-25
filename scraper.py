@@ -18,6 +18,9 @@ import scrapers
 
 TM_SYMBOLS = u'®\u2120™'  # 2120 is SM symbol
 
+DISABLED_SCRAPERS = [
+    'abbott',  # moved the page we were using
+]
 
 def main():
     args = sys.argv[1:]
@@ -26,6 +29,11 @@ def main():
     failed = False
 
     for scraper_name in scraper_names:
+        if scraper_name in DISABLED_SCRAPERS:
+            sys.stderr.write('skipping scraper: {} (disabled)\n'.format(
+                scraper_name))
+            continue
+
         sys.stderr.write('running scraper: {}\n'.format(scraper_name))
         try:
             scraper = load_scraper(scraper_name)

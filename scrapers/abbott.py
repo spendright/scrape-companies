@@ -7,6 +7,8 @@ import scraperwiki
 # TODO: add in prescription and non-consumer brands
 COMPANY = u'Abbott Laboratories'
 
+# TODO: this page no longer exists.
+# start here:
 START_URL = ('http://www.abbott.com/global/url/content/en_US/20.20:20/product'
              '/Products_By_Category.htm')
 
