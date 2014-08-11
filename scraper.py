@@ -78,8 +78,7 @@ def main():
         if scraper_ids:
             if scraper_id not in scraper_ids:
                 continue
-
-        if scraper_id in skip_scraper_ids or scraper_id in DISABLED_SCRAPERS:
+        elif scraper_id in skip_scraper_ids or scraper_id in DISABLED_SCRAPERS:
             log.info('Skipping scraper: {}'.format(scraper_id))
             continue
 
