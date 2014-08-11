@@ -115,7 +115,7 @@ def parse_args(args=None):
 
 
 # map from table name to fields used for the primary key (not including
-# company_scraper_id). All key fields are currently TEXT
+# scraper_id). All key fields are currently TEXT
 TABLE_TO_KEY_FIELDS = {
     # factual information about a brand (e.g. company, url, etc.)
     'brand': ['company', 'brand'],
@@ -143,7 +143,7 @@ def merge(src, dst):
 
 def init_tables():
     for table, key_fields in sorted(TABLE_TO_KEY_FIELDS.items()):
-        key_fields = ['company_scraper_id'] + key_fields
+        key_fields = ['scraper_id'] + key_fields
 
         sql = 'CREATE TABLE IF NOT EXISTS `{}` ('.format(table)
         for k in key_fields:
@@ -159,7 +159,7 @@ def init_tables():
 def delete_records_from_scraper(scraper_id):
     for table in sorted(TABLE_TO_KEY_FIELDS):
         scraperwiki.sql.execute(
-            'DELETE FROM {} WHERE company_scraper_id = ?'.format(table),
+            'DELETE FROM {} WHERE scraper_id = ?'.format(table),
             [scraper_id])
 
 
@@ -274,8 +274,8 @@ def save_records(scraper_id, records):
 
         for key, row in table_to_key_to_row[table].iteritems():
             scraperwiki.sql.save(
-                ['company_scraper_id'] + key_fields,
-                dict(company_scraper_id=scraper_id, **row),
+                ['scraper_id'] + key_fields,
+                dict(scraper_id=scraper_id, **row),
                 table_name=table)
 
 
