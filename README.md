@@ -1,17 +1,29 @@
 <!-- -*- coding: utf-8 -*- -->
-========================
-SpendRight brand scraper
-========================
+============================
+SpendRight companies scraper
+============================
 
-The goal of this project is to generate complete, correct lists of brands
-owned by major companies mentioned in buyer's guides (e.g.
-http://www.hrc.org/apps/buyersguide/index.php). These can be used to power
+The goal of this project is to generate information about companies mentioned
+in buyer's guides (e.g. http://www.hrc.org/apps/buyersguide/index.php),
+including complete, correct lists of brands. These can be used to power
 brand screens, browser extensions, barcode-scanning apps, etc.
 
-The scraper is meant to run in morph.io, a service which auto-runs scrapers.
-You can see the scraper running and download its output (a SQLite database) at
-https://morph.io/spendright-scrapers/brands. More info about the schema
-below. The entry point is `scraper.py`
+This is a project of [SpendRight](http://spendright.org). You can contact
+the author (David Marin) at dave@spendright.org.
+
+Using the Data
+--------------
+
+You are welcome to use this data as-is. It's meant to contain only factual
+data, so there shouldn't be an issue of copyright (e.g. the list of brands
+belonging to a company isn't copyrightable).
+
+You might find it more useful to use data from
+[here](https://morph.io/spendright-scrapers/everything), which also includes
+ratings and other data from several consumer campaigns.
+
+Writing a Scraper
+-----------------
 
 The simplest way to write a scraper is to add a module to scrapers/ which
 defines `COMPANY` (the company name) and `scrape_brands()`, a function which
@@ -38,13 +50,13 @@ Kraft Foods in its entirety (`scrapers/kraft.py`):
         for h1 in soup.select('.brand h1'):
             yield h1.text
 
+You don't need to worry about stripping strings; the scraper harness is
+smart enough to do that. In addition, it knows that brand names stop at
+a ™/®; a string like `" Consort® for Men "` would be auto-converted to
+`"Consort"`, with `"Consort®"` stored in a separate `brand_full` field.
+
 To test a particular scraper rather than running all of them, just specify
 its module name on the command line: `python scraper.py kraft`.
-
-The main use case for this is to match consumer products, so it's helpful
-to know if a brand applies to a service, prescription only, or only marketed
-to other businesses. We use flags like `is_prescription` to call out
-edge cases like this.
 
 To include additional information about a brand, yield a dict with the
 `brand` field set to the brand name, and additional fields. For example,
@@ -55,20 +67,12 @@ here's a snippet from `scraper/astrazeneca.py` that tags prescription brands:
     else:
         yield dict(brand=brand, is_prescription=True)
 
-Currently the scraper only outputs a single table, `brand`. You can add
-any fields you like, but these are the ones we're aiming for:
+You can also assign one or more free-form categories to a brand by setting
+the 'categories' field to a list of strings.
 
- * `company`: name of the company, minus ", Inc." etc.
- * `brand`: brand name, minus "TM", etc.
- * `is_licensed': set to 1 if licensed from another company
- * `is_service`: set to 1 if a service, not a product (e.g. Airlines)
- * `is_prescription`: set to 1 if prescription-only
- * `is_b2b`: set to 1 if primarly marketed to other businesses (e.g. pesticide)
- * `category`: Free-form category description (e.g. `Steak Sauce`). For now, if
-               you need to include multiple categories, just comma-separate
-               them (we can eventually create a brand_category table)
- * `countries`: Countries where the brand is marketed. Use
-              ISO 3166-1 country codes, separated by commas (e.g. `US,CA,GB`).
-              You can also use `!` to specify that a product is marketed in a
-              particular country, e.g. `!US`. (Will probably add utilities
-              that can convert country names to country codes for you.)
+If you wish to scrape information about the company as well (e.g.
+`twitter_handle`), you may instead define a function `scrape_companies()`
+and which yields tuples of (table_name, row); use a table_name of `company`
+for the company, and `brand` for brands.
+
+The names and fields of `brand`, `company` and other tables are described in this [README](https://github.com/spendright-scrapers/everything/blob/master/README.md).
