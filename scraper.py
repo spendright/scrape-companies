@@ -1,5 +1,19 @@
 # -*- coding: utf-8 -*-
-"""Main loop for all brand scrapers.
+
+#   Copyright 2014 David Marin
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+"""Main loop for all company scrapers.
 
 If you want to run particular scrapers (for testing), you can put
 their names on the command line (e.g. python scraper.py avon kraft).
@@ -7,14 +21,26 @@ their names on the command line (e.g. python scraper.py avon kraft).
 It's fine to import from this module inside a scraper
 (e.g. from scraper import TM_SYMBOLS)
 """
+import dumptruck
+import logging
+import re
+import sqlite3
+import sys
+from argparse import ArgumentParser
+from collections import defaultdict
+from decimal import Decimal
+from datetime import datetime
 from os.path import dirname
+from os import environ
 from os import listdir
 from traceback import print_exc
-import sys
+from urlparse import urlparse
 
 import scraperwiki
 
 import scrapers
+
+log = logging.getLogger('scraper')
 
 TM_SYMBOLS = u'®\u2120™'  # 2120 is SM symbol
 
@@ -22,50 +48,239 @@ DISABLED_SCRAPERS = [
     'abbott',  # moved the page we were using
 ]
 
+
+# support decimal type
+dumptruck.PYTHON_SQLITE_TYPE_MAP.setdefault(Decimal, 'real')
+sqlite3.register_adapter(Decimal, str)
+
+
+ISO_8601_FMT = '%Y-%m-%dT%H:%M:%S.%fZ'
+
 def main():
-    args = sys.argv[1:]
-    scraper_names = args or get_scraper_names()
+    opts = parse_args()
 
-    failed = False
+    level = logging.DEBUG if opts.verbose else logging.INFO
+    logging.basicConfig(format='%(name)s: %(message)s', level=level)
 
-    for scraper_name in scraper_names:
-        if scraper_name in DISABLED_SCRAPERS:
-            sys.stderr.write('skipping scraper: {} (disabled)\n'.format(
-                scraper_name))
+    scraper_ids = opts.scraper_ids
+    if not scraper_ids and environ.get('MORPH_COMPANY_SCRAPERS'):
+        scraper_ids = environ['MORPH_COMPANY_SCRAPERS'].split(',')
+
+    skip_scraper_ids = []
+    if environ.get('MORPH_SKIP_COMPANY_SCRAPERS'):
+        skip_scraper_ids = environ['MORPH_SKIP_COMPANY_SCRAPERS'].split(',')
+
+    init_tables()
+
+    failed = []
+
+    for scraper_id in get_scraper_ids():
+        if scraper_ids:
+            if scraper_id not in scraper_ids:
+                continue
+
+        if scraper_id in skip_scraper_ids or scraper_id in DISABLED_SCRAPERS:
+            log.info('Skipping scraper: {}'.format(scraper_id))
             continue
 
-        sys.stderr.write('running scraper: {}\n'.format(scraper_name))
+        log.info('Launching scraper: {}'.format(scraper_id))
         try:
-            scraper = load_scraper(scraper_name)
-
-            records = scraper.scrape_brands()
-            if not isinstance(records, dict):
-                company = clean_string(scraper.COMPANY)
-                records = {company: clean_scraper_output(records)}
-
-            save_records(records)
+            scraper = load_scraper(scraper_id)
+            if hasattr(scraper, 'scrape_company'):
+                save_records(scraper_id, scraper.scrape_company())
+            elif hasattr(scraper, 'scrape_brands'):
+                save_records(scraper_id, wrap_brand_scraper(
+                    scraper.COMPANY, scraper.scrape_brands()))
+            else:
+                raise AttributeError(
+                    'does not define scrape_company() or scrape_brands()')
         except:
-            failed = True
+            failed.append(scraper_id)
             print_exc()
 
-    sys.exit(int(failed))
+    # just calling exit(1) didn't register on morph.io
+    if failed:
+        raise Exception(
+            'failed to scrape campaigns: {}'.format(', '.join(failed)))
 
 
-def save_records(records):
-    scraperwiki.sql.execute(
-        'CREATE TABLE IF NOT EXISTS brand (company TEXT)')
+def parse_args(args=None):
+    parser = ArgumentParser()
+    parser.add_argument('scraper_ids', metavar='N', nargs='*',
+                        help='whitelist of scrapers to run')
+    parser.add_argument(
+        '-v', '--verbose', dest='verbose', default=False, action='store_true',
+        help='Enable debug logging')
 
-    for company, brand_to_row in records.iteritems():
+    return parser.parse_args(args)
+
+
+# map from table name to fields used for the primary key (not including
+# company_scraper_id). All key fields are currently TEXT
+TABLE_TO_KEY_FIELDS = {
+    # factual information about a brand (e.g. company, url, etc.)
+    'brand': ['company', 'brand'],
+    # factual information about which categories a brand belongs to
+    'brand_category': ['company', 'brand', 'category'],
+    # factual information about a company (e.g. url, email, etc.)
+    'company': ['company'],
+    # factual information about which categories a company belongs to
+    'company_category': ['company', 'category'],
+    # used to track when a scraper last ran
+    'company_scraper': [],
+}
+
+TABLE_TO_EXTRA_FIELDS = {
+    'company_scraper': [('last_scraped', 'TEXT')],
+}
+
+
+def merge(src, dst):
+    """Merge src dictionary into dst. Only overwrite blank values."""
+    for k, v in src.iteritems():
+        if v is not None and (v != '' or not dst.get(k)):
+            dst[k] = v
+
+
+def init_tables():
+    for table, key_fields in sorted(TABLE_TO_KEY_FIELDS.items()):
+        key_fields = ['company_scraper_id'] + key_fields
+
+        sql = 'CREATE TABLE IF NOT EXISTS `{}` ('.format(table)
+        for k in key_fields:
+            sql += '`{}` TEXT, '.format(k)
+        for k, field_type in TABLE_TO_EXTRA_FIELDS.get(table) or ():
+            sql += '`{}` {}, '.format(k, field_type)
+        sql += 'PRIMARY KEY ({}))'.format(', '.join(key_fields))
+
+        scraperwiki.sql.execute(sql)
+
+
+
+def delete_records_from_scraper(scraper_id):
+    for table in sorted(TABLE_TO_KEY_FIELDS):
         scraperwiki.sql.execute(
-            'DELETE FROM brand WHERE COMPANY = ?', [company])
-        scraperwiki.sql.commit()
-        for brand, row in brand_to_row.iteritems():
-            row = dict(brand=brand, company=company, **row)
+            'DELETE FROM {} WHERE company_scraper_id = ?'.format(table),
+            [scraper_id])
+
+
+def save_records(scraper_id, records):
+    table_to_key_to_row = defaultdict(dict)
+
+    def handle(table, record):
+        """handle a record from a scraper, which main contain/imply
+        other records"""
+        record = record.copy()
+
+        # allow company to be a dict with company info
+        if 'company' in record and isinstance(record['company'], dict):
+            handle('company', record['company'])
+            record['company'] = record['company']['company']
+
+        # allow company to be a dict with company info
+        if 'brand' in record and isinstance(record['brand'], dict):
+            handle('brand', record['brand'])
+            record['company'] = record['brand'].get('company', '')
+            record['brand'] = record['brand']['brand']
+
+        company = record.get('company', '')
+
+        # allow list of brands, which can be dicts
+        if 'brands' in record:
+            for brand in record.pop('brands'):
+                company = record['company']
+                if isinstance(brand, dict):
+                    handle('brand', dict(company=company, **brand))
+                else:
+                    handle('brand', dict(company=company, brand=brand))
+
+        # strip tm etc. off end of brand
+        if record.get('brand'):
+            for c in TM_SYMBOLS:
+                idx = record['brand'].find(c)
+                if idx != -1:
+                    if not record.get('brand_full'):
+                        record['brand_full'] = record['brand'][:idx + 1]
+                    record['brand'] = record['brand'][:idx]
+
+        # note that brand is also used in the loop above
+        brand = record.get('brand', '')
+
+        # allow list of categories (strings only)
+        if 'categories' in record:
+            if brand:
+                for c in record.pop('categories'):
+                    handle('brand_category', dict(
+                        company=company, brand=brand, category=c))
+            else:
+                for category in record.pop('categories'):
+                    handle('company_category', dict(
+                        company=company, category=category))
+
+        # automatic brand entries
+        if 'brand' in record and table != 'brand':
+            handle('brand', dict(company=company, brand=brand))
+
+        # automatic company entries
+        if 'company' in record and table != 'company':
+            handle('company', dict(company=company))
+
+        store(table, record)
+
+
+    def store(table, record):
+        """store an upacked record in table_to_key_to_row, possibly
+        merging it with a previous record."""
+        key_fields = TABLE_TO_KEY_FIELDS[table]
+
+        # clean strings before storing them
+        for k in record:
+            if k is None:
+                del record[k]
+            elif isinstance(record[k], basestring):
+                record[k] = clean_string(record[k])
+
+        # verify that URLs are absolute
+        for k in record:
+            if k.split('_')[-1] == 'url':
+                if record[k] and not urlparse(record[k]).scheme:
+                    raise ValueError('{} has no scheme: {}'.format(
+                        k, repr(record)))
+
+        for k in key_fields:
+            if record.get(k) is None:
+                record[k] = ''
+
+        key = tuple(record[k] for k in key_fields)
+
+        log.debug('`{}` {}: {}'.format(table, repr(key), repr(record)))
+
+        if key in table_to_key_to_row[table]:
+            merge(record, table_to_key_to_row[table][key])
+        else:
+            table_to_key_to_row[table][key] = record
+
+    for record_type, record in records:
+        handle(record_type, record)
+
+    # add the time this campaign was scraped
+    handle('company_scraper', {
+        'last_scraped': datetime.utcnow().strftime(ISO_8601_FMT)})
+
+
+    delete_records_from_scraper(scraper_id)
+
+    for table in table_to_key_to_row:
+        key_fields = TABLE_TO_KEY_FIELDS[table]
+
+        for key, row in table_to_key_to_row[table].iteritems():
             scraperwiki.sql.save(
-                ['company', 'brand'], row, table_name = 'brand')
+                ['company_scraper_id'] + key_fields,
+                dict(company_scraper_id=scraper_id, **row),
+                table_name=table)
 
 
-def get_scraper_names():
+def get_scraper_ids():
     for filename in sorted(listdir(dirname(scrapers.__file__))):
         if filename.endswith('.py') and not filename.startswith('_'):
             yield filename[:-3]
@@ -86,54 +301,67 @@ def clean_string(s):
     return s
 
 
-def clean_brand(brand):
-    """strip anything after ® or ™, then clean_string()"""
-    for c in TM_SYMBOLS:
-        if c in brand:
-            brand = brand[:brand.index(c)]
-
-    return clean_string(brand)
-
-
-def clean_dict(dict):
-    """Clean all string values in a dict."""
-    result = {}
-
-    for k, v in dict.iteritems():
-        if k == 'brand':
-            result[k] = clean_brand(v)
-        elif isinstance(v, basestring):
-            result[k] = clean_string(v)
+def wrap_brand_scraper(company, brands):
+    """Use this to wrap a brand scraper that only outputs brand
+    dictionaries."""
+    for brand in brands:
+        if isinstance(brand, dict):
+            yield 'brand', dict(company=company, **brand)
         else:
-            result[k] = v
-
-    return result
+            yield 'brand', dict(company=company, brand=brand)
 
 
-def clean_scraper_output(items):
-    """Use this to wrap a scraper. This allows you to write a scraper that
-    just emits strings (brand names) or dictionaries with at least the key
-    "brand", cleans them up for you, and compiles them into a map from
-    brand name to a dict containing other entries to insert into the
-    table.
-    """
-    results = {}
+# UTILITY CODE FOR SCRAPERS
 
-    for item in items:
-        if not item:
-            continue
-        if isinstance(item, dict):
+def scrape_copyright(soup, required=True):
+    """Quick and dirty copyright notice scraper."""
+    for s in soup.stripped_strings:
+        if s.startswith(u'©'):
+            return s
 
-            brand = item.pop('brand')  # modifies dict. that's okay
-            brand = clean_brand(brand)
-            if brand:
-                results[brand] = item
-        else:
-            brand = clean_brand(item)
-            if brand:
-                results[brand] = {}
+    if required:
+        raise ValueError('Copyright notice not found!')
 
-    return results
+
+TWITTER_URL_RE = re.compile(r'^https?://(www\.)?twitter\.com/(\w+)/?$', re.I)
+
+
+def scrape_twitter_handle(soup, required=True):
+    """Find twitter handle on page."""
+    for a in soup.findAll('a'):
+        m = TWITTER_URL_RE.match(a.get('href', ''))
+        if m:
+            # "share" isn't a twitter handle
+            if m.group(2) == 'share':
+                continue
+
+            handle = '@' + m.group(2)
+            # use capitalization of handle in text, if aviailable
+            if a.text and a.text.strip().lower() == handle.lower():
+                handle = a.text.strip()
+            # TODO: scrape twitter page to get capitalization there
+            return handle
+
+    if required:
+        raise ValueError('Twitter handle not found!')
+
+
+FACEBOOK_URL_RE = re.compile(
+    r'^https?://(www\.)facebook\.com/(([\w-]+)|pages/[\w-]+/\d+)/?$', re.I)
+
+def scrape_facebook_url(soup, required=True):
+    """Find twitter handle on page."""
+    for a in soup.findAll('a'):
+        url = a.get('href')
+        if url and FACEBOOK_URL_RE.match(url):
+            # normalize url scheme; Facebook now uses HTTPS
+            if url.startswith('http://'):
+                url = 'https://' + url[7:]
+            return url
+
+    if required:
+        raise ValueError('Facebook URL not found!')
+
 
 
 if __name__ == '__main__':

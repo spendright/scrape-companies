@@ -4,8 +4,6 @@ from urllib2 import urlopen
 
 from bs4 import BeautifulSoup
 
-from scraper import TM_SYMBOLS
-
 
 # TODO: scrape all countries, not just U.S.
 
