@@ -53,7 +53,7 @@ Kraft Foods in its entirety (`scrapers/kraft.py`):
 You don't need to worry about stripping strings; the scraper harness is
 smart enough to do that. In addition, it knows that brand names stop at
 a ™/®; a string like `" Consort® for Men "` would be auto-converted to
-`"Consort"`, with `"Consort®"` stored in a separate `brand_full` field.
+`"Consort"`, with the `®` stored in a separate `tm` field.
 
 To test a particular scraper rather than running all of them, just specify
 its module name on the command line: `python scraper.py kraft`.

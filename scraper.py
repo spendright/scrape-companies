@@ -198,9 +198,8 @@ def save_records(scraper_id, records):
             for c in TM_SYMBOLS:
                 idx = record['brand'].find(c)
                 if idx != -1:
-                    if not record.get('brand_full'):
-                        record['brand_full'] = record['brand'][:idx + 1]
                     record['brand'] = record['brand'][:idx]
+                    record['tm'] = c
 
         # note that brand is also used in the loop above
         brand = record.get('brand', '')
