@@ -45,7 +45,8 @@ log = logging.getLogger('scraper')
 TM_SYMBOLS = u'®\u2120™'  # 2120 is SM symbol
 
 DISABLED_SCRAPERS = [
-    'abbott',  # moved the page we were using
+    'abbott',  # start page gone
+    'gsk',  # start page gone
 ]
 
 
