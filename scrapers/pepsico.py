@@ -17,8 +17,9 @@ def scrape_brands():
     soup = BeautifulSoup(scraperwiki.scrape(URL))
 
     for div in soup.select('div.brand'):
-        # exclude joint ventures (e.g. Starbucks)
-        if any(jv_text in div.p.text for jv_text in JOINT_VENTURES_TEXT):
-            continue
-
-        yield div.img['alt']
+        yield {
+            'brand': div.img['alt'],
+            # "joint venture" brands don't belong to PepsiCo (e.g. Starbucks)
+            'is_licensed': any(
+                jv_text in div.p.text for jv_text in JOINT_VENTURES_TEXT)
+        }
