@@ -122,6 +122,8 @@ TABLE_TO_KEY_FIELDS = {
     'brand': ['company', 'brand'],
     # factual information about which categories a brand belongs to
     'brand_category': ['company', 'brand', 'category'],
+    # category hierarchy information
+    'category': ['category'],
     # factual information about a company (e.g. url, email, etc.)
     'company': ['company'],
     # factual information about which categories a company belongs to
@@ -205,6 +207,11 @@ def save_records(scraper_id, records):
         # note that brand is also used in the loop above
         brand = record.get('brand', '')
 
+        # allow single category
+        if 'category' in record and not (
+                table == 'category' or table.endswith('category')):
+            record['categories'] = [record.pop('category')]
+
         # allow list of categories (strings only)
         if 'categories' in record:
             if brand:
@@ -219,6 +226,12 @@ def save_records(scraper_id, records):
         # automatic brand entries
         if 'brand' in record and table != 'brand':
             handle('brand', dict(company=company, brand=brand))
+
+        # automatic category entries
+        if 'category' in record and table != 'category':
+            handle('category', dict(category=record['category']))
+        if 'parent_category' in record:
+            handle('category', dict(category=record['parent_category']))
 
         # automatic company entries
         if 'company' in record and table != 'company':
