@@ -50,4 +50,4 @@ def scrape_brands():
 
         brand = div.find('span', class_='title').text
 
-        yield {'brand': brand, 'category': category}
+        yield {'brand': brand, 'categories': categories}
