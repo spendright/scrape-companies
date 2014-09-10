@@ -35,18 +35,24 @@ CATEGORY_SELECTORS = [
 ]
 
 BAD_CATEGORY_WORDS = {
-    'sale',
-    'special',
-    'online',
     'blog',
-    'shops',
     'new',
+    'online',
     'pink',
+    'sale',
+    'shops',
+    'special',
+    'specials',
     'vs',
 }
 
 CATEGORY_CORRECTIONS = {
+    'college and pro': 'College and Pro Apparel',
     'fragrances a-z': 'Fragrances',
+    'sleep': 'Sleep Apparel',
+    'sport': 'Sport Apparel',
+    'swim': 'Swim Apparel',
+    'travel': 'Luggage',
 }
 
 
