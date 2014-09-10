@@ -13,7 +13,10 @@ from bs4 import BeautifulSoup
 COMPANY = 'Unilever'
 
 # this page says Unilever has "more than 1000 brands" (!)
-URL = 'http://www.unileverusa.com/brands-in-action/view-brands.aspx?view=AtoZ'
+URLS = [
+    'http://www.unilever.com/brands-in-action/view-brands.aspx?view=AtoZ',
+    'http://www.unileverusa.com/brands-in-action/view-brands.aspx?view=AtoZ',
+]
 
 # 403s without Accept and User-Agent header
 HTTP_HEADERS = {
@@ -38,16 +41,17 @@ def scrape_brands():
     for brand, category in sorted(EXTRA_BRANDS.items()):
         yield {'brand': brand, 'category': category}
 
-    html = urlopen(Request(URL, headers=HTTP_HEADERS)).read()
-    soup = BeautifulSoup(html)
+    for url in URLS:
+        html = urlopen(Request(url, headers=HTTP_HEADERS)).read()
+        soup = BeautifulSoup(html)
 
-    key_to_cat = dict((a['data-filter'], a.text)
-                      for a in soup.select('div.boxSellcontent a'))
+        key_to_cat = dict((a['data-filter'], a.text)
+                          for a in soup.select('div.boxSellcontent a'))
 
-    for div in soup.select('.zlist'):
-        cat_keys = json.loads(div['data-category'])['c']
-        categories = [key_to_cat[k] for k in cat_keys]
+        for div in soup.select('.zlist'):
+            cat_keys = json.loads(div['data-category'])['c']
+            categories = [key_to_cat[k] for k in cat_keys]
 
-        brand = div.find('span', class_='title').text
-
-        yield {'brand': brand, 'categories': categories}
+            brands = div.find('span', class_='title').text.split(', ')
+            for brand in brands:
+                yield {'brand': brand, 'categories': categories}
