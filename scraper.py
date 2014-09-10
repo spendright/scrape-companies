@@ -315,6 +315,7 @@ def clean_string(s):
     s = unicode(s)
     s = s.strip()
     s = s.replace(u'\u2019', "'")
+    s = s.replace(u'\xa0', ' ')
     return s
 
 
