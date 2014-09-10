@@ -36,6 +36,7 @@ CATEGORY_SELECTORS = [
 
 BAD_CATEGORY_WORDS = {
     'blog',
+    'gifts',
     'new',
     'online',
     'pink',
@@ -47,7 +48,7 @@ BAD_CATEGORY_WORDS = {
 }
 
 CATEGORY_CORRECTIONS = {
-    'college and pro': 'College and Pro Apparel',
+    'college & pro': 'College & Pro Apparel',
     'fragrances a-z': 'Fragrances',
     'sleep': 'Sleep Apparel',
     'sport': 'Sport Apparel',
