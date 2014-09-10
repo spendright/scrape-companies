@@ -263,6 +263,11 @@ def save_records(scraper_id, records):
             if record.get(k) is None:
                 record[k] = ''
 
+        # disallow empty company. Easy to forget this when converting
+        # from scrape_brands() to scrape_company().
+        if 'company' in record and not record['company']:
+            raise ValueError('empty company: {}'.format(repr(record)))
+
         key = tuple(record[k] for k in key_fields)
 
         log.debug('`{}` {}: {}'.format(table, repr(key), repr(record)))

@@ -1,32 +1,30 @@
+# -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
 import scraperwiki
 
-COMPANY = "L'Oreal"
+COMPANY = u"L'Oréal"
 
-URL = 'http://www.lorealusa.com/brands/consumer-products-division/softsheen-carson.aspx'
+CATEGORY = 'Cosmetics'
 
-
-# fragances, mostly
-LICENSED_BRANDS = [
-    'Cacharel',
-    'Diesel',
-    'Giorgio Armani',
-    'Maison Martin Margiela',
-    'Ralph Lauren',
-    'Viktor&Rolf',
-]
+URL = 'http://www.lorealusa.com/brands/brands-homepage.aspx'
 
 
-def scrape_brands():
-    yield COMPANY
+def scrape_company():
+    yield 'company', {'company': COMPANY, 'category': CATEGORY}
 
     soup = BeautifulSoup(scraperwiki.scrape(URL))
 
-    # this gets the same brands several times, but that's okay
-    for strong in soup.select('.slides strong'):
-        brand = strong.text.strip()
-        if brand.endswith(';'):
-            brand = brand[:-1]
+    # left hand nav
+    section = soup.find('section', id='Section_CorpTopic_Brand')
 
-        if brand not in LICENSED_BRANDS:
-            yield brand
+    for li in section.select('div > ul > li'):
+        header_a = li.a
+
+        # L'Oreal Luxe is all licensed brands
+        is_licensed = 'Luxe' in header_a.text
+
+        for a in li.select('ul li a'):
+            yield 'brand', {'company': COMPANY,
+                            'brand': a.text,
+                            'url': a['href'],
+                            'is_licensed': is_licensed}
