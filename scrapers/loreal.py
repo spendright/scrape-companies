@@ -25,6 +25,7 @@ def scrape_company():
 
         for a in li.select('ul li a'):
             yield 'brand', {'company': COMPANY,
-                            'brand': a.text,
+                            # fix bad HTML for VIKTOR&ROLF
+                            'brand': a.text.strip().rstrip(';'),
                             'url': a['href'],
                             'is_licensed': is_licensed}

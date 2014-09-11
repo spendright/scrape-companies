@@ -11,7 +11,10 @@ COMPANY_TO_FORMER_BRANDS = {
     },
     'Mattel': {
         'SoftKey',
-    }
+    },
+    'VF': {
+        'John Varvatos',  # sold to Lion Capital in 2012
+    },
 }
 
 
