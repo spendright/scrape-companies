@@ -2,25 +2,17 @@
 
 If a company has its own scraper, put this information there.
 """
-COMPANY_TO_FORMER_BRANDS = {
-    'Groupe Danone': {
-        'LU',
-    },
-    'LG': {
-        'GoldStar',
-    },
-    'Mattel': {
-        'SoftKey',
-    },
-    'VF': {
-        'John Varvatos',  # sold to Lion Capital in 2012
-    },
-}
+FORMER_BRANDS = [
+    ('Groupe Danone', 'LU'),  # sold
+    ('LG', 'GoldStar'),  # discontinued
+    ('Mattel', 'SoftKey'),  # sold
+    ('Microsoft', 'GIANT'),  # stopped selling in 2006
+    ('VF', 'John Varvatos'),  # sold to Lion Capital in 2012
+]
 
 
 def scrape_company():
-    for company, former_brands in COMPANY_TO_FORMER_BRANDS.iteritems():
-        for fb in former_brands:
-            yield 'brand', {'company': company,
-                            'brand': fb,
-                            'is_former': True}
+    for company, brand in FORMER_BRANDS:
+        yield 'brand', {'company': company,
+                        'brand': brand,
+                        'is_former': True}
