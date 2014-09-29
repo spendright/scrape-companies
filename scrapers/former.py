@@ -7,6 +7,7 @@ FORMER_BRANDS = [
     ('LG', 'GoldStar'),  # discontinued
     ('Mattel', 'SoftKey'),  # sold
     ('Microsoft', 'GIANT'),  # stopped selling in 2006
+    (u'Microsoft', u'Calista'),  # acquired in 2008, didn't use brand
     ('VF', 'John Varvatos'),  # sold to Lion Capital in 2012
 ]
 
