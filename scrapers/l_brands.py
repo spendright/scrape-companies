@@ -1,7 +1,7 @@
 import scraperwiki
 from bs4 import BeautifulSoup
 
-from scraper import clean_string
+from srs.norm import clean_string
 
 COMPANY = 'L Brands'
 
@@ -89,5 +89,4 @@ def scrape_categories(url):
                 yield CATEGORY_CORRECTIONS.get(category.lower(), category)
             return
     else:
-        import pdb; pdb.set_trace()
         raise ValueError("Couldn't find top nav on {}".format(url))
