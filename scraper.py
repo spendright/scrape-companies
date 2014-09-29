@@ -23,7 +23,6 @@ It's fine to import from this module inside a scraper
 """
 import dumptruck
 import logging
-import re
 import sqlite3
 import sys
 from argparse import ArgumentParser
@@ -37,6 +36,8 @@ from traceback import print_exc
 from urlparse import urlparse
 
 import scraperwiki
+
+from srs.norm import clean_string
 
 import scrapers
 
@@ -307,16 +308,6 @@ def load_scraper(name):
     module_name = 'scrapers.' + name
     __import__(module_name)
     return sys.modules[module_name]
-
-
-def clean_string(s):
-    """Convert to unicode, remove extra whitespace, and
-    convert fancy apostrophes."""
-    s = unicode(s)
-    s = s.strip()
-    s = s.replace(u'\u2019', "'")
-    s = s.replace(u'\xa0', ' ')
-    return s
 
 
 def wrap_brand_scraper(company, brands):
