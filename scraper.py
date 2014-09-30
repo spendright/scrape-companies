@@ -60,7 +60,7 @@ def main():
 
     use_decimal_type_in_sqlite()
 
-    run_scrapers(get_records_from_scraper,
+    run_scrapers(get_records_from_company_scraper,
                  scraper_ids=scraper_ids,
                  skip_scraper_ids=skip_scraper_ids,
                  supported_tables=SUPPORTED_TABLES)
@@ -77,7 +77,7 @@ def parse_args(args=None):
     return parser.parse_args(args)
 
 
-def get_records_from_scraper(scraper):
+def get_records_from_company_scraper(scraper):
     if hasattr(scraper, 'scrape_company'):
         return scraper.scrape_company()
 
