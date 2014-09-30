@@ -76,3 +76,4 @@ and which yields tuples of (table_name, row); use a table_name of `company`
 for the company, and `brand` for brands.
 
 The names and fields of `brand`, `company` and other tables are described in this [README](https://github.com/spendright-scrapers/everything/blob/master/README.md).
+
