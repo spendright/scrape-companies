@@ -1,7 +1,7 @@
 from urlparse import urljoin
 
-from bs4 import BeautifulSoup
-import scraperwiki
+from srs.scrape import scrape_soup
+
 
 
 # TODO: add in prescription and non-consumer brands
@@ -43,13 +43,13 @@ def scrape_brands():
     for brand in EXTRA_BRANDS:
         yield brand
 
-    start_soup = BeautifulSoup(scraperwiki.scrape(START_URL))
+    start_soup = scrape_soup(START_URL)
     urls = [urljoin(START_URL, a['href'])
             for a in start_soup.select('#nav_secondary a')
             if a.text.strip().lower() not in SKIP_CATEGORIES]
 
     for url in urls:
-        soup = BeautifulSoup(scraperwiki.scrape(url))
+        soup = scrape_soup(url)
 
         for item in soup.select('.product-list-item'):
             brand = item.text

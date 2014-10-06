@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from bs4 import BeautifulSoup
-import scraperwiki
+from srs.scrape import scrape_soup
+
 
 
 COMPANY = 'Clorox'
@@ -10,7 +10,7 @@ URL = 'http://www.thecloroxcompany.com/products/our-brands/'
 
 def scrape_brands():
 
-    soup = BeautifulSoup(scraperwiki.scrape(URL))
+    soup = scrape_soup(URL)
 
     for img in soup.select('div.mainCol img'):
         yield img['alt']

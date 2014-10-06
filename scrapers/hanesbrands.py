@@ -1,5 +1,5 @@
-import scraperwiki
-from bs4 import BeautifulSoup
+
+from srs.scrape import scrape_soup
 
 COMPANY = 'Hanesbrands Inc.'
 
@@ -10,7 +10,7 @@ URL = 'http://www.hanes.com/corporate'
 def scrape_company():
     yield 'company', {'company': COMPANY, 'category': CATEGORY}
 
-    soup = BeautifulSoup(scraperwiki.scrape(URL))
+    soup = scrape_soup(URL)
     for i in soup.select('#CompanyTxt i'):
         for brand in i.text.split(', '):
             yield 'brand', {'company': COMPANY, 'brand': brand}

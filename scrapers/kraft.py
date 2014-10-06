@@ -1,5 +1,5 @@
-from bs4 import BeautifulSoup
-import scraperwiki
+from srs.scrape import scrape_soup
+
 
 
 # TODO: might be able to get useful category information from
@@ -17,7 +17,7 @@ def scrape_brands():
     for b in EXTRA_BRANDS:
         yield b
 
-    soup = BeautifulSoup(scraperwiki.scrape(URL))
+    soup = scrape_soup(URL)
 
     for h1 in soup.select('.brand h1'):
         yield h1.text

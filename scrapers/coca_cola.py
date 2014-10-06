@@ -1,7 +1,7 @@
-from bs4 import BeautifulSoup
 from urllib2 import urlopen
 import json
 
+from bs4 import BeautifulSoup
 
 COMPANY = 'Coca-Cola Company'
 

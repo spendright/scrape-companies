@@ -1,5 +1,5 @@
-from bs4 import BeautifulSoup
-import scraperwiki
+from srs.scrape import scrape_soup
+
 
 
 COMPANY = 'Electrolux'  # full name is AB Electrolux, but "AB" is like "Inc."
@@ -10,7 +10,7 @@ URL = 'http://brandlicensing.electrolux.com/en/our-brands/all/'
 COUNTRY = 'USA'
 
 def scrape_brands():
-    soup = BeautifulSoup(scraperwiki.scrape(URL))
+    soup = scrape_soup(URL)
 
     for div in soup.select('div.Brands-panel'):
         if div.h3.text == COUNTRY:

@@ -1,7 +1,7 @@
 from urlparse import urljoin
 
-from bs4 import BeautifulSoup
-import scraperwiki
+from srs.scrape import scrape_soup
+
 
 
 COMPANY = u'GlaxoSmithKline'
@@ -14,7 +14,7 @@ SHORTEN_BRANDS = ['Beechams']
 def scrape_brands():
     yield COMPANY
 
-    start_soup = BeautifulSoup(scraperwiki.scrape(START_URL))
+    start_soup = scrape_soup(START_URL)
 
     urls = [urljoin(START_URL, a['href'])
             for a in start_soup.select('#alphaPaginationContent a')]
@@ -23,7 +23,7 @@ def scrape_brands():
         if url == START_URL + '#':
             soup = start_soup
         else:
-            soup = BeautifulSoup(scraperwiki.scrape(url))
+            soup = scrape_soup(url)
 
         for a in soup.select('td.tableItalic a'):
             brand = a.text.strip()

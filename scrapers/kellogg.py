@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from bs4 import BeautifulSoup
-import scraperwiki
+from srs.scrape import scrape_soup
+
 
 
 COMPANY = 'Kellogg'
@@ -13,7 +13,7 @@ def scrape_brands():
     for b in EXTRA_BRANDS:
         yield b
 
-    soup = BeautifulSoup(scraperwiki.scrape(URL))
+    soup = scrape_soup(URL)
 
     for a in soup.select('#navleft-brand a'):
         yield a.text

@@ -1,5 +1,5 @@
-import scraperwiki
-from bs4 import BeautifulSoup
+
+from srs.scrape import scrape_soup
 
 from srs.norm import clean_string
 
@@ -64,7 +64,7 @@ def scrape_brands():
     for fb in FORMER_BRANDS:
         yield {'brand': fb, 'is_former': True}
 
-    soup = BeautifulSoup(scraperwiki.scrape(URL))
+    soup = scrape_soup(URL)
 
     for a in soup.select('#contentTwo a'):
         yield {'brand': a.text,
@@ -75,7 +75,7 @@ def scrape_brands():
 
 def scrape_categories(url):
     """Actually go to the home page for the brand and scrape top nav."""
-    soup = BeautifulSoup(scraperwiki.scrape(url))
+    soup = scrape_soup(url)
 
     for selector in CATEGORY_SELECTORS:
         elts = soup.select(selector)

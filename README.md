@@ -32,9 +32,7 @@ and performs de-duplication. As an example, here is the scraper for
 Kraft Foods in its entirety (`scrapers/kraft.py`):
 
 
-    from bs4 import BeautifulSoup
-    import scraperwiki
-
+    from srs.scrape import scrape_soup
 
     COMPANY = 'Kraft Foods'
     URL = 'http://www.kraftfoodsgroup.com/brands/index.aspx'
@@ -45,7 +43,7 @@ Kraft Foods in its entirety (`scrapers/kraft.py`):
         for b in EXTRA_BRANDS:
             yield b
 
-        soup = BeautifulSoup(scraperwiki.scrape(URL))
+        soup = scrape_soup(URL)
 
         for h1 in soup.select('.brand h1'):
             yield h1.text
@@ -76,4 +74,3 @@ and which yields tuples of (table_name, row); use a table_name of `company`
 for the company, and `brand` for brands.
 
 The names and fields of `brand`, `company` and other tables are described in this [README](https://github.com/spendright-scrapers/everything/blob/master/README.md).
-

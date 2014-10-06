@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 
-from urllib2 import Request
-from urllib2 import urlopen
-
-from bs4 import BeautifulSoup
+from srs.scrape import scrape_soup
 
 
 # TODO: scrape all countries, not just U.S.
@@ -18,11 +15,6 @@ URLS = [
     'http://www.unileverusa.com/brands-in-action/view-brands.aspx?view=AtoZ',
 ]
 
-# 403s without Accept and User-Agent header
-HTTP_HEADERS = {
-    'Accept': 'text/html',
-    'User-Agent': 'Mozilla/5.0',
-}
 
 # Best Foods is an alternate name for Hellmann's (mayo)
 # Marmite and PG Tips are U.K. brands available in the U.S.
@@ -42,8 +34,7 @@ def scrape_brands():
         yield {'brand': brand, 'category': category}
 
     for url in URLS:
-        html = urlopen(Request(url, headers=HTTP_HEADERS)).read()
-        soup = BeautifulSoup(html)
+        soup = scrape_soup(url)
 
         key_to_cat = dict((a['data-filter'], a.text)
                           for a in soup.select('div.boxSellcontent a'))

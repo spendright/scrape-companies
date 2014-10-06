@@ -1,5 +1,5 @@
-from bs4 import BeautifulSoup
-import scraperwiki
+from srs.scrape import scrape_soup
+
 
 COMPANY = 'Avon'
 
@@ -21,13 +21,13 @@ def scrape_brands():
     for brand in MORE_BRANDS:
         yield brand
 
-    start_soup = BeautifulSoup(scraperwiki.scrape(START_URL))
+    start_soup = scrape_soup(START_URL)
 
     urls = [a['href'] for a in start_soup.select('div.topmenu a')
             if a['title'].lower() not in SKIP_CATEGORIES]
 
     for url in urls:
-        soup = BeautifulSoup(scraperwiki.scrape(url))
+        soup = scrape_soup(url)
 
         for a in soup.select('div#shopByBrand a'):
             yield a.text

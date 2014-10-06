@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from bs4 import BeautifulSoup
-import scraperwiki
+from srs.scrape import scrape_soup
+
 
 COMPANY = u"L'Oréal"
 
@@ -12,7 +12,7 @@ URL = 'http://www.lorealusa.com/brands/brands-homepage.aspx'
 def scrape_company():
     yield 'company', {'company': COMPANY, 'category': CATEGORY}
 
-    soup = BeautifulSoup(scraperwiki.scrape(URL))
+    soup = scrape_soup(URL)
 
     # left hand nav
     section = soup.find('section', id='Section_CorpTopic_Brand')

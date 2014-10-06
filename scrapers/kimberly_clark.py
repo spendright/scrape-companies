@@ -1,5 +1,5 @@
-from bs4 import BeautifulSoup
-import scraperwiki
+from srs.scrape import scrape_soup
+
 
 COMPANY = 'Kimberly-Clark'
 
@@ -34,13 +34,13 @@ def scrape_brands():
     for brand in HEALTH_CARE_BRANDS + PROFESSIONAL_BRANDS:
         yield brand
 
-    start_soup = BeautifulSoup(scraperwiki.scrape(START_URL))
+    start_soup = scrape_soup(START_URL)
 
     urls = [a['href'] for a in start_soup.select('#nav li a')
             if a.text.strip() not in SKIP_SECTIONS]
 
     for url in urls:
-        soup = BeautifulSoup(scraperwiki.scrape(url))
+        soup = scrape_soup(url)
         for h3 in soup.select('.accordion h3'):
             brand = h3.text
             if any(a.text.strip() == COUNTRY

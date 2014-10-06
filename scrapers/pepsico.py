@@ -1,5 +1,5 @@
-from bs4 import BeautifulSoup
-import scraperwiki
+from srs.scrape import scrape_soup
+
 
 
 COMPANY = u'PepsiCo'
@@ -14,7 +14,7 @@ JOINT_VENTURES_TEXT = [
 def scrape_brands():
     yield COMPANY
 
-    soup = BeautifulSoup(scraperwiki.scrape(URL))
+    soup = scrape_soup(URL)
 
     for div in soup.select('div.brand'):
         yield {

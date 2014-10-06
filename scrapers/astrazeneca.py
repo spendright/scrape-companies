@@ -1,7 +1,7 @@
 import re
 
-from bs4 import BeautifulSoup
-import scraperwiki
+from srs.scrape import scrape_soup
+
 
 
 COMPANY = u'AstraZeneca'
@@ -18,7 +18,7 @@ OTC_BRANDS = ['emla']  # Lidocaine Cream
 
 
 def scrape_brands():
-    soup = BeautifulSoup(scraperwiki.scrape(URL))
+    soup = scrape_soup(URL)
 
     yield COMPANY
 

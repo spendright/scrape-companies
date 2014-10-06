@@ -1,17 +1,8 @@
-from urllib2 import Request
-from urllib2 import urlopen
-
-from bs4 import BeautifulSoup
+from srs.scrape import scrape_soup
 
 COMPANY = 'Merck & Co.'
 
 URL = 'https://www.merck.com/product/home.html'
-
-# 403s without Accept and User-Agent header
-HTTP_HEADERS = {
-    'Accept': 'text/html',
-    'User-Agent': 'Mozilla/5.0',
-}
 
 MORE_BRANDS = [u'Merck', u'Schering-Plough']
 
@@ -26,8 +17,7 @@ def scrape_brands():
     for brand in MORE_BRANDS:
         yield brand
 
-    html = urlopen(Request(URL, headers=HTTP_HEADERS)).read()
-    soup = BeautifulSoup(html)
+    soup = scrape_soup(URL)
 
     for h5 in soup.select('ul.alphabetic-content h5'):
         if h5.sup:

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from urlparse import urljoin
 
-from bs4 import BeautifulSoup
-import scraperwiki
+from srs.scrape import scrape_soup
+
 
 
 COMPANY = u'Nestlé'
@@ -17,14 +17,14 @@ SKIP_LINKS = ['websites']
 def scrape_brands():
     yield COMPANY
 
-    start_soup = BeautifulSoup(scraperwiki.scrape(START_URL))
+    start_soup = scrape_soup(START_URL)
 
     urls = [urljoin(START_URL, a['href'])
             for a in start_soup.select('#sNavigation a')
             if a.text.strip().lower() not in SKIP_LINKS]
 
     for url in urls:
-        soup = BeautifulSoup(scraperwiki.scrape(url))
+        soup = scrape_soup(url)
 
         for a in soup.select('.brandCarousel a'):
             href = a['href']
