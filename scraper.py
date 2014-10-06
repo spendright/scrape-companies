@@ -32,16 +32,6 @@ DISABLED_SCRAPERS = {
     'gsk',  # start page gone
 }
 
-# tables supported by this scraper
-SUPPORTED_TABLES = [
-    'brand',
-    'brand_category',
-    'category',
-    'company',
-    'company_category',
-    'scraper',
-]
-
 
 def main():
     opts = parse_args()
@@ -62,8 +52,7 @@ def main():
 
     run_scrapers(get_records_from_company_scraper,
                  scraper_ids=scraper_ids,
-                 skip_scraper_ids=skip_scraper_ids,
-                 supported_tables=SUPPORTED_TABLES)
+                 skip_scraper_ids=skip_scraper_ids)
 
 
 def parse_args(args=None):
