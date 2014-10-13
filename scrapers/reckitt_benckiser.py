@@ -5,6 +5,8 @@ from srs.scrape import scrape_soup
 COMPANY = u'Reckitt-Benckiser'
 
 
+# TODO: this no longer exists. Use #scroller from
+# http://www.rb.com/our-brands instead
 START_URL = 'http://www.rb.com/ourbrands/search-rb-brands-a-z/a-f'
 
 MORE_BRANDS = [

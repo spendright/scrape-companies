@@ -27,9 +27,11 @@ from srs.harness import run_scrapers
 
 log = logging.getLogger('scraper')
 
+# scrapers that used to work but whose start page disappeared
 DISABLED_SCRAPERS = {
-    'abbott',  # start page gone
-    'gsk',  # start page gone
+    'abbott',
+    'gsk',
+    'reckitt_benckiser',
 }
 
 
