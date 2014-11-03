@@ -38,6 +38,10 @@ def scrape_company():
         cat = a.text
         url = a['href']
 
+        # TODO: match brands with logos
+        # treat "French's" as single brand
+        # correct "Cillet Bang" -> "Cillit Bang"
+
         soup = scrape_soup(url)
         for h2 in soup.select('h2'):
             brand = h2.text.strip()
