@@ -32,7 +32,6 @@ log = logging.getLogger('scraper')
 DISABLED_SCRAPERS = {
     'abbott',
     'gsk',
-    'reckitt_benckiser',
 }
 
 
