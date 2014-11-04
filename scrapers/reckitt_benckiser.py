@@ -1,5 +1,6 @@
-from srs.scrape import scrape_soup
+from srs.norm import smunch
 
+from srs.scrape import scrape_soup
 
 
 COMPANY = u'Reckitt-Benckiser'
@@ -17,6 +18,21 @@ MORE_BRANDS = [
     #u'Reckitt & Benckiser',  # appears on amazon, but not really legit
 ]
 
+BRAND_CORRECTIONS = {
+    "Cillet Bang": "Cillit Bang",
+}
+
+SMUNCHED_BRAND_CORRECTIONS = dict(
+    (smunch(bad), smunch(good))
+    for bad, good in BRAND_CORRECTIONS.iteritems())
+
+# site has an entry for each product in this line; treat them
+# as categories instead
+KNOWN_BRANDS = [
+    "French's",
+]
+
+
 
 def scrape_company():
 
@@ -25,12 +41,17 @@ def scrape_company():
     for brand in MORE_BRANDS:
         yield 'brand', dict(company=COMPANY, brand=brand)
 
+    # get logo for brands
     brands_soup = scrape_soup(BRANDS_URL)
 
+    sb_to_logo_url = {}  # map smunch(brand) to logo_url
+
     for img in brands_soup.select('#scroller img'):
-        yield 'brand', dict(company=COMPANY,
-                            brand=img['alt'],
-                            logo_url=img['src'])
+        sb = smunch(img['alt'])
+        sb = SMUNCHED_BRAND_CORRECTIONS.get(sb, sb)
+        logo_url = img['src']
+
+        sb_to_logo_url[sb] = logo_url
 
     cat_soup = scrape_soup(CATEGORY_URL)
 
@@ -45,7 +66,21 @@ def scrape_company():
         soup = scrape_soup(url)
         for h2 in soup.select('h2'):
             brand = h2.text.strip()
+
             if brand:
-                yield 'brand', dict(company=COMPANY,
-                                    brand=h2.text,
-                                    category=cat)
+                # special case for French's
+                for kb in KNOWN_BRANDS:
+                    if brand.startswith(kb + ' '):
+                        sub_cat = brand[len(kb) + 1:]
+                        yield 'category', dict(category=sub_cat,
+                                               parent_category=cat)
+                        brand = kb
+                        cat = sub_cat
+                        break
+
+                # brand dict
+                yield 'brand', dict(
+                    company=COMPANY,
+                    brand=brand,
+                    category=cat,
+                    logo_url = sb_to_logo_url.get(smunch(brand)))
