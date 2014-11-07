@@ -90,12 +90,12 @@ def scrape_company():
                         yield 'category', dict(category=sub_cat,
                                                parent_category=cat)
                         brand = kb
-                        cat = sub_cat
-                        break
+                        brand_cat = sub_cat  # don't redefine cat
+                    else:
+                        brand_cat = cat
 
-                # brand dict
                 yield 'brand', dict(
                     company=COMPANY,
                     brand=brand,
-                    category=cat,
+                    category=brand_cat,
                     logo_url = sb_to_logo_url.get(smunch(brand)))
