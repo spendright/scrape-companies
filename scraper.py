@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-#   Copyright 2014 David Marin
+#   Copyright 2014 SpendRight, Inc.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ from os import environ
 
 from srs.db import use_decimal_type_in_sqlite
 from srs.harness import run_scrapers
+from srs.log import log_to_stderr
 
 log = logging.getLogger('scraper')
 
@@ -31,15 +32,13 @@ log = logging.getLogger('scraper')
 DISABLED_SCRAPERS = {
     'abbott',
     'gsk',
-    'reckitt_benckiser',
 }
 
 
 def main():
     opts = parse_args()
 
-    level = logging.DEBUG if opts.verbose else logging.INFO
-    logging.basicConfig(format='%(name)s: %(message)s', level=level)
+    log_to_stderr(verbose=opts.verbose, quiet=opts.quiet)
 
     scraper_ids = opts.scraper_ids
     if not scraper_ids and environ.get('MORPH_COMPANY_SCRAPERS'):
@@ -64,6 +63,9 @@ def parse_args(args=None):
     parser.add_argument(
         '-v', '--verbose', dest='verbose', default=False, action='store_true',
         help='Enable debug logging')
+    parser.add_argument(
+        '-q', '--quiet', dest='quiet', default=False, action='store_true',
+        help='Log warnings only')
 
     return parser.parse_args(args)
 
