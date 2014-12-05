@@ -20,6 +20,7 @@ their names on the command line (e.g. python scraper.py avon kraft).
 """
 import logging
 from argparse import ArgumentParser
+from datetime import timedelta
 from os import environ
 
 from srs.db import use_decimal_type_in_sqlite
@@ -34,6 +35,9 @@ DISABLED_SCRAPERS = {
     'electrolux',
     'gsk',
 }
+
+# scrape these campaigns no more often than this limit
+DEFAULT_SCRAPE_FREQ = timedelta(days=6, hours=1)  # run nightly, scrape weekly
 
 
 def main():
@@ -54,7 +58,8 @@ def main():
 
     run_scrapers(get_records_from_company_scraper,
                  scraper_ids=scraper_ids,
-                 skip_scraper_ids=skip_scraper_ids)
+                 skip_scraper_ids=skip_scraper_ids,
+                 default_freq=DEFAULT_SCRAPE_FREQ)
 
 
 def parse_args(args=None):
