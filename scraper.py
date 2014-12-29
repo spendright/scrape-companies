@@ -34,6 +34,7 @@ DISABLED_SCRAPERS = {
     'abbott',
     'electrolux',
     'gsk',
+    'newell_rubbermaid',
 }
 
 # scrape these campaigns no more often than this limit

@@ -32,7 +32,10 @@ def scrape_soup_from_bad_html(url):
 def scrape_brands():
     start_soup = scrape_soup_from_bad_html(START_URL)
 
-    # if page structure changes, we'll get errors
+    # TODO: there isn't a left nav anymore. The individual brand pages
+    # still exist (e.g.
+    # http://newellrubbermaid.com/OurBrands/Tools/Pages/Irwin.aspx)
+    # but it's not clear how to navigate to them.
     nav = start_soup.find('div', class_='switchNav1')
 
     for a in nav.select('a'):
