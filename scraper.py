@@ -35,6 +35,7 @@ DISABLED_SCRAPERS = {
     'avon',  # blocked by robots.txt
     'electrolux',
     'gsk',
+    'newell_rubbermaid',
 }
 
 # scrape these campaigns no more often than this limit
