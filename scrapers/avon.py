@@ -18,6 +18,9 @@ from srs.scrape import scrape_soup
 
 COMPANY = 'Avon'
 
+# online store is blocked by robots.txt; try
+# https://www.avon.com/category/allbrands instead
+
 # going to scrape brands off their online store
 START_URL = 'http://shop.avon.com/product_list.aspx'
 

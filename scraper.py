@@ -32,6 +32,7 @@ log = logging.getLogger('scraper')
 # scrapers that used to work but whose start page disappeared
 DISABLED_SCRAPERS = {
     'abbott',
+    'avon',  # blocked by robots.txt
     'electrolux',
     'gsk',
 }
