@@ -87,8 +87,8 @@ def scrape_company():
                 for kb in KNOWN_BRANDS:
                     if brand.startswith(kb + ' '):
                         sub_cat = brand[len(kb) + 1:]
-                        yield 'category', dict(category=sub_cat,
-                                               parent_category=cat)
+                        yield 'subcategory', dict(category=cat,
+                                                  subcategory=sub_cat)
                         brand = kb
                         brand_cat = sub_cat  # don't redefine cat
                     else:
