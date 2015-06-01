@@ -35,6 +35,7 @@ DISABLED_SCRAPERS = {
     'avon',  # blocked by robots.txt
     'electrolux',
     'gsk',
+    'l_brands',  # returned a 920 somehow
     'newell_rubbermaid',
 }
 
