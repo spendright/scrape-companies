@@ -37,6 +37,7 @@ DISABLED_SCRAPERS = {
     'gsk',
     'l_brands',  # returned a 920 somehow
     'newell_rubbermaid',
+    'novartis',
 }
 
 # scrape these campaigns no more often than this limit
