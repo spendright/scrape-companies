@@ -19,6 +19,14 @@ from srs.scrape import scrape_soup
 
 COMPANY = u'Hasbro'
 
+# TODO: this page no longer exists. Try:
+# http://www.hasbro.com/en-us/brands
+#
+# look in each ul.brand-list li
+# the img alt has the brand name, and the href has a hint as to
+# whether it's licensed (e.g.
+# http://www.hasbro.com/en-us/toys-games/disney:frozen)
+
 URL = 'http://www.hasbro.com/shop/brandlist.cfm'
 
 
