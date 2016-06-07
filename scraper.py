@@ -16,7 +16,7 @@
 """Main loop for all company scrapers.
 
 If you want to run particular scrapers (for testing), you can put
-their names on the command line (e.g. python scraper.py avon kraft).
+their names on the command line (e.g. python scraper.py clorox pepsico).
 """
 import logging
 from argparse import ArgumentParser
